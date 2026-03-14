@@ -1,3 +1,4 @@
+
 import { readFile } from "node:fs/promises"
 import { createClient } from "@supabase/supabase-js"
 const env=Object.fromEntries((await readFile(new URL("../.env.local",import.meta.url),"utf8")).split(/\r?\n/).map(l=>l.trim()).filter(l=>l&&!l.startsWith("#")&&l.includes("=")).map(l=>{const i=l.indexOf("=");return [l.slice(0,i),l.slice(i+1)]}))
