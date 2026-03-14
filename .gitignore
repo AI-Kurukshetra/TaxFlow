@@ -1,0 +1,18 @@
+.next/
+node_modules/
+
+# local environment and logs
+.env.local
+.env*.local
+.codex-next-dev.err.log
+.codex-next-dev.out.log
+
+# build and cache artifacts
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
