@@ -1,19 +1,11 @@
-import { ComplianceRiskScanner } from "@/components/dashboard/compliance-risk-scanner";
-import { PageHeader } from "@/components/dashboard/page-header";
+﻿import { PageHeader } from "@/components/dashboard/page-header";
 import { SectionCard } from "@/components/dashboard/section-card";
 import { StatusBadge } from "@/components/dashboard/status-badge";
 import { requireOrganizationAccess } from "@/lib/auth/guards";
-import { getComplianceScanTransactions } from "@/lib/dashboard/compliance-scan";
 import { getCompliancePageData } from "@/lib/dashboard/live-data";
 
 export default async function CompliancePage() {
-  const [{ alerts }, transactions, access] = await Promise.all([
-    getCompliancePageData(),
-    getComplianceScanTransactions(),
-    requireOrganizationAccess(),
-  ]);
-
-  const canRunRiskScan = access.role === "admin" || access.role === "tax_manager";
+  const [{ alerts }, access] = await Promise.all([getCompliancePageData(), requireOrganizationAccess()]);
 
   return (
     <div className="space-y-8">
@@ -23,19 +15,19 @@ export default async function CompliancePage() {
       />
 
       <SectionCard
-        title="AI compliance risk scan"
-        subtitle="Run the existing compliance-risk model against recent organization transactions."
+        title="Compliance monitoring"
+        subtitle="Automated risk scanning is currently limited to the rules-based alerts shown below."
       >
-        {canRunRiskScan ? (
-          <ComplianceRiskScanner transactions={transactions} />
-        ) : (
-          <p className="text-sm text-slate-400">Your role can review alerts but cannot run AI compliance scans.</p>
-        )}
+        <p className="text-sm text-slate-400">
+          {access.role === "admin" || access.role === "tax_manager"
+            ? "Review the active alerts below to investigate filing blockers and exception clusters."
+            : "Your role can review active compliance alerts but cannot manage monitoring configuration."}
+        </p>
       </SectionCard>
 
       <SectionCard
         title="Active alerts"
-        subtitle="AI-detected and rules-based compliance signals ordered by severity."
+        subtitle="Rules-based compliance signals ordered by severity."
       >
         {alerts.length > 0 ? (
           <div className="grid gap-4 lg:grid-cols-3">
